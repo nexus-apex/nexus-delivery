@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} DeliveryOrder | NexusDelivery{% endblock %}
+{% block page_title %}{% if editing %}Edit DeliveryOrder{% else %}New DeliveryOrder{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Order Id</label>
+        <input type="text" name="order_id" value="{{ record.order_id|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Customer Name</label>
+        <input type="text" name="customer_name" value="{{ record.customer_name|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Customer Phone</label>
+        <input type="text" name="customer_phone" value="{{ record.customer_phone|default:'' }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pickup Address</label>
+      <textarea name="pickup_address">{{ record.pickup_address|default:'' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Delivery Address</label>
+      <textarea name="delivery_address">{{ record.delivery_address|default:'' }}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="pending" {% if record.status == 'pending' %}selected{% endif %}>Pending</option>
+          <option value="assigned" {% if record.status == 'assigned' %}selected{% endif %}>Assigned</option>
+          <option value="picked_up" {% if record.status == 'picked_up' %}selected{% endif %}>Picked Up</option>
+          <option value="in_transit" {% if record.status == 'in_transit' %}selected{% endif %}>In Transit</option>
+          <option value="delivered" {% if record.status == 'delivered' %}selected{% endif %}>Delivered</option>
+          <option value="failed" {% if record.status == 'failed' %}selected{% endif %}>Failed</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Amount</label>
+        <input type="number" step="0.01" name="amount" value="{{ record.amount|default:'0' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Assigned Driver</label>
+        <input type="text" name="assigned_driver" value="{{ record.assigned_driver|default:'' }}">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} DeliveryOrder</button>
+      <a href="/deliveryorders/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
