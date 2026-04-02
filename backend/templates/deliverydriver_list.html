@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Deliverydrivers | NexusDelivery{% endblock %}
+{% block page_title %}Deliverydrivers{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+  <form class="search-bar" method="get" style="flex:1;margin-bottom:0">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search deliverydrivers...">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All Vehicle Type</option>
+      <option value="bike" {% if status_filter == 'bike' %}selected{% endif %}>Bike</option>
+      <option value="car" {% if status_filter == 'car' %}selected{% endif %}>Car</option>
+      <option value="van" {% if status_filter == 'van' %}selected{% endif %}>Van</option>
+      <option value="truck" {% if status_filter == 'truck' %}selected{% endif %}>Truck</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+  </form>
+  <a href="/deliverydrivers/create/" class="btn btn-primary">+ New DeliveryDriver</a>
+</div>
+
+<div class="card">
+  {% if records %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Phone</th><th>Email</th><th>Vehicle Type</th><th>License Number</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><a href="/deliverydrivers/{{ r.pk }}/edit/"><strong>{{ r.name }}</strong></a></td>
+        <td>{{ r.phone|default:"-" }}</td>
+        <td style="color:var(--muted)">{{ r.email|default:"-" }}</td>
+        <td><span class="badge badge-blue">{{ r.get_vehicle_type_display }}</span></td>
+        <td>{{ r.license_number|default:"-" }}</td>
+        <td class="actions">
+          <a href="/deliverydrivers/{{ r.pk }}/edit/" class="btn btn-primary btn-sm">Edit</a>
+          <form method="post" action="/deliverydrivers/{{ r.pk }}/delete/" style="display:inline" onsubmit="return confirm('Delete?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No deliverydrivers found.</p>
+    <a href="/deliverydrivers/create/" class="btn btn-primary" style="margin-top:1rem">Create DeliveryDriver</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
